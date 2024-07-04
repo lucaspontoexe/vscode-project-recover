@@ -2,6 +2,7 @@ import { cpSync, existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 // windows:  %appdata%\code\user\history
+// linux:   ~/.config/Code/User/History
 const historyFolder = "./History";
 
 const folderlist = readdirSync(historyFolder); // array com as pastas
@@ -27,12 +28,16 @@ for (let currentFolder of folderlist) {
   /** @type entries_json */
   const entries_json = JSON.parse(f);
 
-  if (!entries_json.resource.includes("f%3A")) continue;
+  // idea: filter files
+  // if (!entries_json.resource.includes("f%3A")) continue;
 
+  // grab most recent file
+  // idea: select biggest/latest
   const source = path.join(historyFolder, currentFolder, entries_json.entries.at(-1).id);
   const destination = path.join(
     "recovered",
-    decodeURIComponent(entries_json.resource.substring(31))
+    // remove invalid windows chars
+    decodeURIComponent(entries_json.resource).replaceAll(':', '') 
   );
 
   cpSync(source, destination, { recursive: true });
