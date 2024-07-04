@@ -31,7 +31,7 @@ for (let currentFolder of folderlist) {
 
   const source = path.join(historyFolder, currentFolder, entries_json.entries.at(-1).id);
   const destination = path.join(
-    "recovered2",
+    "recovered",
     decodeURIComponent(entries_json.resource.substring(31))
   );
 
