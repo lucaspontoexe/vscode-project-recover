@@ -1,8 +1,8 @@
-import { cpSync, existsSync, readFileSync, readdirSync } from 'node:fs';
-import path from 'node:path';
+import { cpSync, existsSync, readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
 
 // windows:  %appdata%\code\user\history
-const historyFolder = './History'; 
+const historyFolder = "./History";
 
 const folderlist = readdirSync(historyFolder); // array com as pastas
 
@@ -18,19 +18,22 @@ const folderlist = readdirSync(historyFolder); // array com as pastas
  */
 
 for (let currentFolder of folderlist) {
-    const filepath = path.join(historyFolder, currentFolder, "entries.json");
-    if (!existsSync(filepath)) {
-        console.log('um arquivo que não segue padrão apareceu')
-        continue;
-    };
-    const f = readFileSync(filepath, {encoding: 'utf8'});
-    /** @type entries_json */
-    const entries_json = JSON.parse(f);
+  const filepath = path.join(historyFolder, currentFolder, "entries.json");
+  if (!existsSync(filepath)) {
+    console.log("um arquivo que não segue padrão apareceu");
+    continue;
+  }
+  const f = readFileSync(filepath, { encoding: "utf8" });
+  /** @type entries_json */
+  const entries_json = JSON.parse(f);
 
-    if (!entries_json.resource.includes('f%3A')) continue;
+  if (!entries_json.resource.includes("f%3A")) continue;
 
-    const source = (path.join(historyFolder, currentFolder, entries_json.entries.at(-1).id));
-    const destination = (path.join('recovered2', decodeURIComponent(entries_json.resource.substring(31))));
-    
-    cpSync(source, destination, {recursive: true})
+  const source = path.join(historyFolder, currentFolder, entries_json.entries.at(-1).id);
+  const destination = path.join(
+    "recovered2",
+    decodeURIComponent(entries_json.resource.substring(31))
+  );
+
+  cpSync(source, destination, { recursive: true });
 }
